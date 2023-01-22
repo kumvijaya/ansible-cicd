@@ -1,0 +1,11 @@
+name: Ansible CICD
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  ansible-cicd:
+      uses: kumvijaya/ansible-workflows/.github/workflows/ansible-workflow.yml@main
+      secrets: inherit

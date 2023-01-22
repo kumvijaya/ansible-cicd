@@ -1,0 +1,55 @@
+- name: Delete L3 attributes of given interfaces.
+  arista.eos.eos_l3_interfaces:
+    config:
+      - name: Ethernet1
+      - name: Ethernet2
+    state: deleted
+- name: Merge provided configuration with device configuration.
+  arista.eos.eos_l3_interfaces:
+    config:
+      - name: Ethernet1
+        ipv4:
+          - address: 198.51.100.14/24
+      - name: Ethernet2
+        ipv4:
+          - address: 203.0.113.27/24
+    state: merged
+- name: >-
+    Override device configuration of all L2 interfaces on device with provided
+    configuration.
+  arista.eos.eos_l3_interfaces:
+    config:
+      - name: Ethernet1
+        ipv6:
+          - address: '2001:db8:feed::1/96'
+      - name: Management1
+        ipv4:
+          - address: dhcp
+    ipv6: auto-config
+    state: overridden
+- name: >-
+    Replace device configuration of specified L2 interfaces with provided
+    configuration.
+  arista.eos.eos_l3_interfaces:
+    config:
+      - name: Ethernet2
+        ipv4:
+          - address: 203.0.113.27/24
+    state: replaced
+- name: Use parsed to convert native configs to structured data
+  arista.eos.interfaces:
+    running_config: '{{ lookup(''file'', ''parsed.cfg'') }}'
+    state: parsed
+- name: Use Rendered to convert the structured data to native config
+  arista.eos.eos_l3_interfaces:
+    config:
+      - name: Ethernet1
+        ipv4:
+          - address: 198.51.100.14/24
+      - name: Ethernet2
+        ipv4:
+          - address: 203.0.113.27/24
+    state: rendered
+- name: Gather l3 interfaces facts from the device
+  arista.eos.l3_interfaces:
+    state: gathered
