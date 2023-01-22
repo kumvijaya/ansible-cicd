@@ -7,4 +7,4 @@
   tasks:
   - name: Print debug message
     debug:
-      msg: Hai Hello, world!
+      msg: Hello, world!
