@@ -58,6 +58,7 @@ jobs:
 
       - name: Set ansible hosts
         run: |
+          sudo mkdir /etc/ansible
           sudo cp deploy/hosts /etc/ansible/hosts
 
       - name: Lint
