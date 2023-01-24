@@ -56,22 +56,9 @@ jobs:
             fi
           done
 
-      - id: get_owner
-        shell: bash
-        run: echo "##[set-output name=owner;]$(echo ${GITHUB_REPOSITORY%/*})"
-        
-      - uses: actions/checkout@v3
-        with:
-          repository: ${{ steps.get_owner.outputs.owner }}/ansible-config
-          ref: main
-          path: ansible-config
-
-      - name: Set ansible config
+      - name: Set ansible hosts
         run: |
-          sudo mkdir -p .config
-          sudo cp ansible-config/ansible-lint.yml .config/ansible-lint.yml
-          sudo mkdir /etc/ansible
-          sudo cp ansible-config/hosts /etc/ansible/hosts
+          sudo cp deploy/hosts /etc/ansible/hosts
 
       - name: Lint
         if: steps.changed-files.outputs.any_changed == 'true'
