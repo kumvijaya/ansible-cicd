@@ -1,0 +1,89 @@
+name: Ansible Workflow
+
+on:  
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  ansible-workflow:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' 
+
+      - name: Install Ansible
+        run: |
+          python3 -m pip install ansible
+          python3 -m pip install ansible-pylibssh paramiko
+          ansible --version
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - id: changed-files
+        uses: tj-actions/changed-files@v35
+        with:
+          files: |
+            !.github
+            !.config
+            !*.md
+
+      - name: Show changed files
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          echo "Below yaml files are changed:"
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            ext="${file##*.}"
+            if [ $ext == yml ] || [ $ext = yaml ]; then
+              echo $file
+            fi
+          done
+
+      - name: Show changed files diffs
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            ext="${file##*.}"
+            if [ $ext == yml ] || [ $ext = yaml ]; then
+              echo "Generating diff for $file"
+              git diff HEAD~1 $file
+            fi
+          done
+
+      - id: get_owner
+        shell: bash
+        run: echo "##[set-output name=owner;]$(echo ${GITHUB_REPOSITORY%/*})"
+        
+      - uses: actions/checkout@v3
+        with:
+          repository: ${{ steps.get_owner.outputs.owner }}/ansible-config
+          ref: main
+          path: ansible-config
+
+      - name: Set ansible config
+        run: |
+          sudo mkdir -p .config
+          sudo cp ansible-config/ansible-lint.yml .config/ansible-lint.yml
+          sudo mkdir /etc/ansible
+          sudo cp ansible-config/hosts /etc/ansible/hosts
+
+      - name: Lint
+        if: steps.changed-files.outputs.any_changed == 'true'
+        uses: ansible/ansible-lint-action@v6.10.2
+
+      - name: Dry-run
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            ext="${file##*.}"
+            if [ $ext == yml ] || [ $ext = yaml ]; then
+              echo "Executing dry-run for $file"
+              ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook $file --check -v
+            fi
+          done     
