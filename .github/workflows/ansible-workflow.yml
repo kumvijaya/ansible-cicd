@@ -10,8 +10,8 @@ jobs:
     name: Ansible CICD
     continue-on-error: false
     env:
-      CISCO_PASSWORD_TEST: 'C1sco12345'
-
+      CISCO_USER: ${{ secrets.CISCO_USER }}
+      CISCO_PASSWORD: ${{ secrets.CISCO_PASSWORD }}
     steps:
       - name: Install Python
         uses: actions/setup-python@v4
