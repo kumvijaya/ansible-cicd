@@ -10,7 +10,7 @@ jobs:
     name: Ansible CICD
     continue-on-error: false
     env:
-      CISCO_PASSWORD: 'C1sco12345'
+      CISCO_PASSWORD_TEST: 'C1sco12345'
 
     steps:
       - name: Install Python
