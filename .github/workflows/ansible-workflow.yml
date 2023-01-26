@@ -7,6 +7,10 @@ on:
 jobs:
   ansible-workflow:
     runs-on: ubuntu-latest
+    name: Ansible CICD
+    continue-on-error: false
+    env:
+      CISCO_PASSWORD: 'C1sco12345'
 
     steps:
       - name: Install Python
