@@ -108,3 +108,14 @@ jobs:
         run: |
           ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook snapshot.yml
           cat host_out.txt
+
+      - name: Read host name output
+        if: steps.changed-files.outputs.any_changed == 'true'
+        id: host_out
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./host_out.txt
+      - name: Show check-in file
+        run: |
+          echo "Following file will be checkedin"
+          echo "${{ steps.host_out.outputs.content }}"
