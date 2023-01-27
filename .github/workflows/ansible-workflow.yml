@@ -107,5 +107,4 @@ jobs:
         if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook snapshot.yml
-          ls -ltr
-          cat csr1000v-1
+          cat host_out.txt
