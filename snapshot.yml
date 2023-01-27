@@ -12,8 +12,7 @@
       register: entire_output
     - debug:
         var: entire_output
-    - name: SAVE THE OUTPUT TO LOCAL FILE
-      file:
-        path: "/etc/ansbile/ansible_facts['net_hostname']"
-        state: touch
+    - local_action: 
+        module: copy 
         content: '{{ entire_output.stdout }}'
+        dest: /etc/ansbile/facts
