@@ -4,7 +4,7 @@
     - name: Print all Facts
       ansible.builtin.debug:
         var: ansible_facts
-        
+
     - name: GET CONFIGURATION AND STATE OUTPUTs
       cisco.ios.ios_command:
         commands:
@@ -15,14 +15,12 @@
     - debug:
         var: entire_output
 
-    - name: SAVE THE OUTPUT FILE NAME
-      local_action: 
+    - local_action: 
         module: copy 
         content: '{{ ansible_facts['net_hostname'] }}'
         dest: ./host_out.txt
     
-    - name: SAVE THE OUTPUT TO LOCAL FILE
-      local_action: 
+    - local_action: 
         module: copy 
         content: '{{ entire_output.stdout }}'
         dest: ./{{ ansible_facts['net_hostname'] }}
