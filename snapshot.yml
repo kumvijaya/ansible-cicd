@@ -15,4 +15,4 @@
     - local_action: 
         module: copy 
         content: '{{ entire_output.stdout }}'
-        dest: /etc/ansible/facts
+        dest: ./facts_output
