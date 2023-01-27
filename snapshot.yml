@@ -17,10 +17,10 @@
 
     - local_action: 
         module: copy 
-        content: "{{ ansible_facts['net_hostname'] }}"
+        content: "{{ ansible_facts['net_hostname'] }}.json"
         dest: ./host_out.txt
     
-    - local_action: 
-        module: copy 
-        content: '{{ entire_output.stdout }}'
-        dest: ./{{ ansible_facts['net_hostname'] }}
+    - name: Copy ansible facts to a file
+      copy:
+        content: "{{ ansible_facts }}"
+        dest: ./{{ ansible_facts['net_hostname'] }}.json
