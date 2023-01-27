@@ -27,6 +27,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - id: changed-files
@@ -119,8 +120,8 @@ jobs:
           rm -rf ./host_out.txt
           echo "Below file will be checked-in:"
           echo "${{ steps.host_out.outputs.content }}"
-          git config --local user.email "kumvijaya@gmail.com"
-          git config --local user.name "kumvijaya"
+          git config --local user.email "12345678+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git add ${{ steps.host_out.outputs.content }}
           git commit -a -m "Added ansible fact output file"
       - if: steps.changed-files.outputs.any_changed == 'true'
