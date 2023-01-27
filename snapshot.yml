@@ -14,6 +14,6 @@
         var: entire_output
     - name: SAVE THE OUTPUT TO LOCAL FILE
       file:
-        path: 'etc/ansbile/ansible_facts[''net_hostname'']'
+        path: '/etc/ansbile/ansible_facts[''net_hostname'']'
         state: touch
         content: '{{ entire_output.stdout }}'
