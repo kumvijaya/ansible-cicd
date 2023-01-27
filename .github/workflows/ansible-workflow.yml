@@ -102,3 +102,8 @@ jobs:
               ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook $file
             fi
           done
+
+      - name: Collect the facts
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook snapshot
