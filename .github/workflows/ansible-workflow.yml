@@ -108,30 +108,23 @@ jobs:
         if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook snapshot.yml
-          cat host_out.txt
-
-      - name: Read host name file
-        if: steps.changed-files.outputs.any_changed == 'true'
+      - if: steps.changed-files.outputs.any_changed == 'true'
         id: host_out
         uses: juliangruber/read-file-action@v1
         with:
           path: ./host_out.txt
-          
-      - name: Show check-in file
+
+      - name: Commit fact output
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           rm -rf ./host_out.txt
           echo "Below file will be checked-in:"
           echo "${{ steps.host_out.outputs.content }}"
-          echo "Content of ${{ steps.host_out.outputs.content }}"
-          cat ${{ steps.host_out.outputs.content }}
-
-      - name: Commit file
-        run: |
           git config --local user.email "kumvijaya+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git commit -a -m "Add changes"
-
-      - name: Push file
+          git add ${{ steps.host_out.outputs.content }}
+          git commit -a -m "Added ansible fact output file"
+      - if: steps.changed-files.outputs.any_changed == 'true'
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
