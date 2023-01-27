@@ -27,6 +27,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - id: changed-files
@@ -109,15 +110,29 @@ jobs:
           ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook snapshot.yml
           cat host_out.txt
 
-      - name: Read host name output
+      - name: Read host name file
         if: steps.changed-files.outputs.any_changed == 'true'
         id: host_out
         uses: juliangruber/read-file-action@v1
         with:
           path: ./host_out.txt
+          
       - name: Show check-in file
         run: |
-          echo "Following file will be checked-in"
+          rm -rf ./host_out.txt
+          echo "Below file will be checked-in:"
           echo "${{ steps.host_out.outputs.content }}"
-          echo "content"
+          echo "Content of ${{ steps.host_out.outputs.content }}"
           cat ${{ steps.host_out.outputs.content }}
+
+      - name: Commit file
+        run: |
+          git config --local user.email "kumvijaya+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -a -m "Add changes"
+
+      - name: Push file
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
