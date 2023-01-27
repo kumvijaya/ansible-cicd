@@ -35,6 +35,7 @@ jobs:
           files: |
             !.github
             !.config
+            !snapshot.yml
             !*.md
 
       - name: Show changed files
@@ -77,4 +78,27 @@ jobs:
               echo "Executing dry-run for $file"
               ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook $file --check -v
             fi
-          done     
+          done
+
+      - name: Show Deploy files
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          echo "Below yaml files will be executed:"
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            ext="${file##*.}"
+            if [ $ext == yml ] || [ $ext = yaml ]; then
+              echo $file
+            fi
+          done
+
+      - name: Deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          echo "Below yaml files will be executed:"
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            ext="${file##*.}"
+            if [ $ext == yml ] || [ $ext = yaml ]; then
+              echo "Executing $file"
+              ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook $file
+            fi
+          done

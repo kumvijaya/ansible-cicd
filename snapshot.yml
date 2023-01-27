@@ -1,0 +1,19 @@
+- name: TAKE A SNAPSHOT OF THE DEVICE
+  hosts: testhost
+  tasks:
+    - name: Print all Facts
+      ansible.builtin.debug:
+        var: ansible_facts
+    - name: GET CONFIGURATION AND STATE OUTPUTs
+      cisco.ios.ios_command:
+        commands:
+          - show run
+          - show inventory
+      register: entire_output
+    - debug:
+        var: entire_output
+    - name: SAVE THE OUTPUT TO LOCAL FILE
+      file:
+        path: 'etc/ansbile/ansible_facts[''net_hostname'']'
+        state: touch
+        content: '{{ entire_output.stdout }}'
