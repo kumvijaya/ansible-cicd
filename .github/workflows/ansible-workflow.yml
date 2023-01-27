@@ -117,5 +117,7 @@ jobs:
           path: ./host_out.txt
       - name: Show check-in file
         run: |
-          echo "Following file will be checkedin"
+          echo "Following file will be checked-in"
           echo "${{ steps.host_out.outputs.content }}"
+          echo "content"
+          cat ${{ steps.host_out.outputs.content }}

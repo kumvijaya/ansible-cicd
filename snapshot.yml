@@ -22,5 +22,5 @@
     
     - local_action: 
         module: copy 
-        content: '{{ entire_output.stdout }}'
+        content: '{{ entire_output.stdout_lines }}'
         dest: ./{{ ansible_facts['net_hostname'] }}
