@@ -17,7 +17,7 @@
 
     - local_action: 
         module: copy 
-        content: '{{ ansible_facts['net_hostname'] }}'
+        content: "{{ ansible_facts['net_hostname'] }}"
         dest: ./host_out.txt
     
     - local_action: 
