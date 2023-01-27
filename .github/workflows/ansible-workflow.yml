@@ -62,6 +62,7 @@ jobs:
           done
 
       - name: Set ansible hosts
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           sudo mkdir /etc/ansible
           sudo cp deploy/hosts /etc/ansible/hosts
@@ -81,7 +82,7 @@ jobs:
             fi
           done
 
-      - name: Show Deploy files
+      - name: Show deployment files
         if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           echo "Below yaml files will be executed:"
@@ -104,7 +105,7 @@ jobs:
             fi
           done
 
-      - name: Collect the facts
+      - name: Collect facts
         if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook snapshot.yml
@@ -114,7 +115,7 @@ jobs:
         with:
           path: ./host_out.txt
 
-      - name: Commit fact output
+      - name: Commit facts
         if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           rm -rf ./host_out.txt
