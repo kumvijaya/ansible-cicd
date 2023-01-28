@@ -70,8 +70,10 @@ jobs:
           done
 
       - name: Commit facts output
-        uses: EndBug/add-and-commit@v9
-        with:
-          message: Added facts ouput
-          committer_name: GitHub Actions
-          committer_email: actions@github.com
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          git config --local user.email "12345678+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "Added ansible run fact output file"
+          git push

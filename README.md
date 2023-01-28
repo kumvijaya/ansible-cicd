@@ -19,4 +19,4 @@ This also uses the [Inventory config (hosts)](https://docs.ansible.com/ansible/l
 This also uses the [Inventory config (hosts)](https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html) defined in *deploy/hosts*
 
 *Note*: Each playbook should have facts collection tasks and the task to save the output to file in *./snapshots/* folder. The output file name should be host name of the platy book run. For example *./snapshots/csr1000v-1*
-- **Commit the facts file**: Commits the added/updated fact output file to current codebase. Uses [EndBug/add-and-commit](https://github.com/marketplace/actions/add-commit)
+- **Commit the facts file**: Commits the added/updated fact output file to current codebase. Uses [git commands](https://github.com/actions/checkout#push-a-commit-using-the-built-in-token)
