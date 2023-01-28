@@ -74,9 +74,13 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add .
           git commit -m "Added ansible run fact output file"
+          push_required=true
+          git commit -m "Added ansible run fact output file" || push_required=false
+          echo "push_required=$push_required"
+          echo "push_required=$push_required" >> $GITHUB_ENV
 
       - name: Push facts output
-        if: steps.changed-files.outputs.any_changed == 'true'
+        if: ${{ steps.changed-files.outputs.any_changed == 'true' && env.push_required == 'true' }}
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
