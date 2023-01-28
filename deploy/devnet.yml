@@ -1,4 +1,4 @@
-- name: THIS IS TO TEST PLAYBOOK
+- name: THIS IS TO TEST PLAYBOOK WITH FACT COLLECTION
   hosts: testhost
   tasks:
     - name: Add Banner
