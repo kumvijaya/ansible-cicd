@@ -7,9 +7,29 @@
         text: |
           ASDM THIS IS TEST BANNERR
         state: present
+
     - name: Add loopback
       cisco.ios.ios_interfaces:
         config:
           - name: Loopback4
             description: L4 Configured by Ansible
         state: merged
+
+    - name: Print all facts
+      ansible.builtin.debug:
+        var: ansible_facts
+
+    - name: Get configuration and state outputs
+      cisco.ios.ios_command:
+        commands:
+          - show run
+          - show inventory
+      register: entire_output
+
+    - debug:
+        var: entire_output
+    
+    - name: Save facts content to snapshots
+      copy:
+        content: '{{ entire_output.stdout }}'
+        dest: ./snapshots/{{ ansible_facts['net_hostname'] }}

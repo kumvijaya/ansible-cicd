@@ -7,7 +7,7 @@ on:
 jobs:
   ansible-workflow:
     runs-on: ubuntu-latest
-    name: Ansible CICD
+    name: Ansible CI
     continue-on-error: false
     env:
       CISCO_USER: ${{ secrets.CISCO_USER }}
@@ -36,7 +36,6 @@ jobs:
           files: |
             !.github
             !.config
-            !snapshot.yml
             !*.md
 
       - name: Show changed files
@@ -66,6 +65,7 @@ jobs:
         run: |
           sudo mkdir /etc/ansible
           sudo cp deploy/hosts /etc/ansible/hosts
+          sudo mkdir -p ./snapshots
 
       - name: Lint
         if: steps.changed-files.outputs.any_changed == 'true'
@@ -81,52 +81,3 @@ jobs:
               ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook $file --check -v
             fi
           done
-
-      - name: Show deployment files
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: |
-          echo "Below yaml files will be executed:"
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            ext="${file##*.}"
-            if [ $ext == yml ] || [ $ext = yaml ]; then
-              echo $file
-            fi
-          done
-
-      - name: Deploy
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: |
-          echo "Below yaml files will be executed:"
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            ext="${file##*.}"
-            if [ $ext == yml ] || [ $ext = yaml ]; then
-              echo "Executing $file"
-              ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook $file
-            fi
-          done
-
-      - name: Collect facts
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: |
-          ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook snapshot.yml
-      - if: steps.changed-files.outputs.any_changed == 'true'
-        id: host_out
-        uses: juliangruber/read-file-action@v1
-        with:
-          path: ./host_out.txt
-
-      - name: Commit facts
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: |
-          rm -rf ./host_out.txt
-          echo "Below file will be checked-in:"
-          echo "${{ steps.host_out.outputs.content }}"
-          git config --local user.email "12345678+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add .
-          git commit -m "Added ansible fact output file"
-      - if: steps.changed-files.outputs.any_changed == 'true'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
