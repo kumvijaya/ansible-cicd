@@ -42,8 +42,6 @@ jobs:
         run: |
           sudo mkdir /etc/ansible
           sudo cp deploy/hosts /etc/ansible/hosts
-          sudo mkdir -p ./snapshots
-          sudo chmod -R a+rw ./snapshots
 
       - name: Show deployment files
         if: steps.changed-files.outputs.any_changed == 'true'
@@ -59,8 +57,8 @@ jobs:
       - name: Deploy
         if: steps.changed-files.outputs.any_changed == 'true'
         run: |
-          
-          echo "Below yaml files will be executed:"
+          sudo mkdir -p ./snapshots
+          sudo chmod -R a+rw ./snapshots
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             ext="${file##*.}"
             if [ $ext == yml ] || [ $ext = yaml ]; then

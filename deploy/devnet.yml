@@ -1,7 +1,7 @@
-- name: THIS IS TO TEST MAIN PLAYBOOK WITH FACT COLLECTION
+- name: TEST PLAYBOOK WITH FACT COLLECTION
   hosts: testhost
   tasks:
-    - name: Add Banner
+    - name: Add banner
       cisco.ios.ios_banner:
         banner: login
         text: |
