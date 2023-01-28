@@ -1,4 +1,4 @@
-- name: TEST PLAYBOOK WITH FACT COLLECTION
+- name: TEST PLAYBOOK WITH ALL FACT COLLECTION
   hosts: testhost
   tasks:
     - name: Add banner
