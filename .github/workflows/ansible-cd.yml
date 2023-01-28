@@ -1,4 +1,4 @@
-name: Ansible Workflow
+name: Ansible CD
 
 on:
   workflow_dispatch:
@@ -43,6 +43,7 @@ jobs:
           sudo mkdir /etc/ansible
           sudo cp deploy/hosts /etc/ansible/hosts
           sudo mkdir -p ./snapshots
+          sudo chmod -R a+rw ./snapshots
 
       - name: Show deployment files
         if: steps.changed-files.outputs.any_changed == 'true'
@@ -67,7 +68,7 @@ jobs:
               ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook $file
             fi
           done
-          
+
       - name: Commit facts output
         uses: EndBug/add-and-commit@v9
         with:

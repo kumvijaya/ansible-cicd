@@ -1,4 +1,4 @@
-name: Ansible Workflow
+name: Ansible CI
 
 on:  
   push:
