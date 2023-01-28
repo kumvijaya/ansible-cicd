@@ -1,4 +1,4 @@
-- name: TEST PLAYBOOK WITH ALL FACT COLLECTION
+- name: TEST PLAYBOOK WITH ALL THE FACT COLLECTION
   hosts: testhost
   tasks:
     - name: Add banner
@@ -29,7 +29,7 @@
     - debug:
         var: entire_output
     
-    - name: Save facts content to snapshots
+    - name: Save facts file to snapshots
       copy:
         content: '{{ entire_output.stdout }}'
         dest: ./snapshots/{{ ansible_facts['net_hostname'] }}
