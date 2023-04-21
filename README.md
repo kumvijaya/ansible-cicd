@@ -1,5 +1,7 @@
 # Ansible sample with workflow
 
+Added New Feature
+
 ## CI Workflow
 This uses [CI workflow](https://github.com/kumvijaya/ansible-samples/blob/main/.github/workflows/ansible-ci.yml) with below steps
 - **Checkout**: Checksout the repository
